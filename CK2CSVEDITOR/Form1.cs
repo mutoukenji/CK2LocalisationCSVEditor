@@ -53,6 +53,11 @@ namespace CK2CSVEDITOR
                 if (openResult == DialogResult.OK)
                 {
                     textContainer.Clear();
+                    header = "";
+                    codeColumn = -1;
+                    englishColumn = -1;
+                    codes.Clear();
+                    lines.Clear();
                     loadFile(openDialog.FileName);
                     listData();
                 }
@@ -351,6 +356,11 @@ namespace CK2CSVEDITOR
                 }
                 if(open)
                 {
+                    header = "";
+                    codeColumn = -1;
+                    englishColumn = -1;
+                    codes.Clear();
+                    lines.Clear();
                     textContainer.Clear();
                     loadFile(files[0]);
                     listData();
