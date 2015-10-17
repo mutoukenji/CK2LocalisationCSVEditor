@@ -1,0 +1,3 @@
+# CK2LocalisationCSVEditor
+编辑十字军之王2中Localisation文件夹下CSV文件的小工具
+
