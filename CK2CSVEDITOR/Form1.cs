@@ -120,6 +120,9 @@ namespace CK2CSVEDITOR
                                     case (byte)'R':
                                         str.Append("<color red>");
                                         break;
+                                    case (byte)'B':
+                                        str.Append("<color blue>");
+                                        break;
                                     case (byte)'!':
                                         str.Append("</color>");
                                         break;
@@ -130,6 +133,11 @@ namespace CK2CSVEDITOR
                                         break;
                                 }
                                 j += 1;
+                            }
+                            // 金钱符号
+                            else if(lineBuffer[j] == 0xA4)
+                            {
+                                str.Append("<money/>");
                             }
                             // 双字节
                             else if (lineBuffer[j] < 0x00 || lineBuffer[j] > 0x7F)
@@ -225,8 +233,15 @@ namespace CK2CSVEDITOR
                     byte[] bBefore = Encoding.Default.GetBytes(before);
                     Array.Copy(bBefore, 0, bEnglish, bEngLength, bBefore.Length);
                     bEngLength += bBefore.Length;
+                    // 金钱标记
+                    if(after.StartsWith("<money/>",StringComparison.OrdinalIgnoreCase))
+                    {
+                        bEnglish[bEngLength++] = 0xA4;
+                        // 去掉<money/>，共8个字符
+                        searchText = after.Substring(8);
+                    }
                     // 颜色标签关闭
-                    if(after.StartsWith("</color>",StringComparison.OrdinalIgnoreCase))
+                    else if (after.StartsWith("</color>",StringComparison.OrdinalIgnoreCase))
                     {
                         bEnglish[bEngLength++] = 0xA7;
                         bEnglish[bEngLength++] = (byte)'!';
@@ -257,6 +272,10 @@ namespace CK2CSVEDITOR
                             case "red":
                             case "RED":
                                 c = 'R';
+                                break;
+                            case "blue":
+                            case "BLUE":
+                                c = 'B';
                                 break;
                             default:
                                 c = color.ToUpperInvariant()[0];
@@ -301,7 +320,20 @@ namespace CK2CSVEDITOR
         {
             int idxColorStart = text.IndexOf("<color", start, StringComparison.OrdinalIgnoreCase);
             int idxColorEnd = text.IndexOf("</color>", start, StringComparison.OrdinalIgnoreCase);
-            if(idxColorStart >= 0 && idxColorEnd >= 0)
+            int idxMoney = text.IndexOf("<money/>", start, StringComparison.OrdinalIgnoreCase);
+            if(idxColorStart >= 0 && idxColorEnd >= 0 && idxMoney >= 0)
+            {
+                return Math.Min(Math.Min(idxColorStart, idxColorEnd), idxMoney);
+            }
+            else if(idxColorStart >= 0 && idxMoney >= 0)
+            {
+                return Math.Min(idxColorStart, idxMoney);
+            }
+            else if(idxColorEnd >= 0 && idxMoney >= 0)
+            {
+                return Math.Min(idxColorEnd, idxMoney);
+            }
+            else if(idxColorStart >= 0 && idxColorEnd >= 0)
             {
                 return Math.Min(idxColorStart, idxColorEnd);
             }
@@ -312,6 +344,10 @@ namespace CK2CSVEDITOR
             else if(idxColorEnd >= 0)
             {
                 return idxColorEnd;
+            }
+            else if(idxMoney >= 0)
+            {
+                return idxMoney;
             }
             else
             {
