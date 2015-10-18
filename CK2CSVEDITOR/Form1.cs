@@ -20,9 +20,9 @@ namespace CK2CSVEDITOR
         // 顶部头（不要也无所谓）
         string header = "";
         // CODE对应列
-        int codeColumn = -1;
+        int codeColumn = 0;
         // 英语对应列
-        int englishColumn = -1;
+        int englishColumn = 1;
 
         public mainForm()
         {
@@ -54,8 +54,8 @@ namespace CK2CSVEDITOR
                 {
                     textContainer.Clear();
                     header = "";
-                    codeColumn = -1;
-                    englishColumn = -1;
+                    codeColumn = 0;
+                    englishColumn = 1;
                     codes.Clear();
                     lines.Clear();
                     loadFile(openDialog.FileName);
@@ -357,8 +357,8 @@ namespace CK2CSVEDITOR
                 if(open)
                 {
                     header = "";
-                    codeColumn = -1;
-                    englishColumn = -1;
+                    codeColumn = 0;
+                    englishColumn = 1;
                     codes.Clear();
                     lines.Clear();
                     textContainer.Clear();
